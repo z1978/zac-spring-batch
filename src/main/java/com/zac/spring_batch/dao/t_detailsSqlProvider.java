@@ -1,11 +1,11 @@
 package com.zac.spring_batch.dao;
 
-import com.zac.spring_batch.entity.T_Details;
+import com.zac.spring_batch.entity.t_details;
 import org.apache.ibatis.jdbc.SQL;
 
-public class T_DetailsSqlProvider {
+public class t_detailsSqlProvider {
 
-    public String insertSelective(T_Details record) {
+    public String insertSelective(t_details record) {
         SQL sql = new SQL();
         sql.INSERT_INTO("t_details");
         

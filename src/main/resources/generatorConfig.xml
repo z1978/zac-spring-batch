@@ -26,7 +26,7 @@
 		<javaClientGenerator targetPackage="com.zac.spring_batch.dao" targetProject="zac-spring-batch/src/main/java" type="ANNOTATEDMAPPER" />
 		<!-- 要生成的那些表(更改tableName 和domainObjectName 就可以了) -->
 		<table schema="spring_batch_test" tableName="m_user"
-			domainObjectName="M_User" enableCountByExample="false"
+			domainObjectName="m_user" enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 			<columnOverride column="user_id" property="user_id" />
@@ -34,7 +34,7 @@
 			<columnOverride column="last_name" property="last_name" />
 		</table>
 		<table schema="spring_batch_test" tableName="t_details"
-			domainObjectName="T_Details" enableCountByExample="false"
+			domainObjectName="t_details" enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 			<columnOverride column="user_id" property="user_id" />

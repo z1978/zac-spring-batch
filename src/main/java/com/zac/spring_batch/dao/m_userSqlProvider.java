@@ -1,11 +1,11 @@
 package com.zac.spring_batch.dao;
 
-import com.zac.spring_batch.entity.M_User;
+import com.zac.spring_batch.entity.m_user;
 import org.apache.ibatis.jdbc.SQL;
 
-public class M_UserSqlProvider {
+public class m_userSqlProvider {
 
-    public String insertSelective(M_User record) {
+    public String insertSelective(m_user record) {
         SQL sql = new SQL();
         sql.INSERT_INTO("m_user");
         

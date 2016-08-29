@@ -1,1 +1,4 @@
 # This is a spring batch project
+
+https://github.com/muumin/spring-boot-batch-sample
+https://github.com/megaya/spring_boot_batch_sample.git

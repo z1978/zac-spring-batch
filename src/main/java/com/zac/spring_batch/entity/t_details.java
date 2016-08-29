@@ -1,6 +1,6 @@
 package com.zac.spring_batch.entity;
 
-public class T_Details {
+public class t_details {
     private Integer user_id;
 
     private Integer sex;
