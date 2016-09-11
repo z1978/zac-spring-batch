@@ -1,21 +1,23 @@
-package com.zac.spring_batch.user_csv;
+package com.zac.spring.boot.example;
 
-/**
- * 
- * @author zac
- * @version
- * @since 2.0.0
- */
 
-public class UserCsvBean {
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+public class PersonBean {
     private String lastName;
     private String firstName;
 
-    public UserCsvBean() {
+    public PersonBean() {
 
     }
 
-    public UserCsvBean(String firstName, String lastName) {
+    public PersonBean(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

@@ -1,5 +1,4 @@
-package com.zac.example;
-
+package com.zac.spring.boot.example;
 
 import javax.sql.DataSource;
 
@@ -20,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-
-import com.zac.spring_batch.entity.m_user;
-
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @EnableBatchProcessing
@@ -37,57 +34,47 @@ public class BatchConfiguration {
     @Autowired
     public DataSource dataSource;
 
+    // tag::readerwriterprocessor[]
     @Bean
-    public FlatFileItemReader<m_user> reader() {
-        FlatFileItemReader<m_user> reader = new FlatFileItemReader<m_user>();
+    public FlatFileItemReader<PersonBean> reader() {
+        FlatFileItemReader<PersonBean> reader = new FlatFileItemReader<PersonBean>();
         reader.setResource(new ClassPathResource("sample-data.csv"));
-
-        reader.setLineMapper(new DefaultLineMapper<m_user>() {{
-            setLineTokenizer(new DelimitedLineTokenizer(){{
+        reader.setLineMapper(new DefaultLineMapper<PersonBean>() {{
+            setLineTokenizer(new DelimitedLineTokenizer() {{
                 setNames(new String[] { "firstName", "lastName" });
             }});
-            setFieldSetMapper(new BeanWrapperFieldSetMapper<m_user>() {{
-                    setTargetType(m_user.class);
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<PersonBean>() {{
+                setTargetType(PersonBean.class);
             }});
         }});
-
-        /*
-        // こっちの書き方の方がわかりやすいかも
-
-        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames(new String[] { "firstName", "lastName" });
-        BeanWrapperFieldSetMapper<Person> fieldSetMapper = new BeanWrapperFieldSetMapper<Person>();
-        fieldSetMapper.setTargetType(Person.class);
-
-        DefaultLineMapper<Person> lineMapper = new DefaultLineMapper<Person>();
-        lineMapper.setLineTokenizer(lineTokenizer);
-        lineMapper.setFieldSetMapper(fieldSetMapper);
-        reader.setLineMapper(lineMapper);
-
-        */
         return reader;
     }
 
     @Bean
-    public JdbcBatchItemWriter<m_user> writer() {
-        JdbcBatchItemWriter<m_user> writer = new JdbcBatchItemWriter<m_user>();
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<m_user>());
-        writer.setSql("INSERT INTO people (user_id, first_name, last_name) VALUES (user_id:first_name, :last_name)");
+    public PersonItemProcessor processor() {
+        return new PersonItemProcessor();
+    }
+
+    @Bean
+    public JdbcBatchItemWriter<PersonBean> writer() {
+        JdbcBatchItemWriter<PersonBean> writer = new JdbcBatchItemWriter<PersonBean>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<PersonBean>());
+        writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
         writer.setDataSource(dataSource);
         return writer;
     }
+    // end::readerwriterprocessor[]
 
- 
-    @Bean
-    public CsvItemProcessor processor() {
-        return new CsvItemProcessor();
-    }
+    // tag::listener[]
+
     @Bean
     public JobExecutionListener listener() {
-        return new JobCompletionNotificationListener();
+        return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
     }
 
+    // end::listener[]
 
+    // tag::jobstep[]
     @Bean
     public Job importUserJob() {
         return jobBuilderFactory.get("importUserJob")
@@ -101,11 +88,12 @@ public class BatchConfiguration {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<m_user, m_user> chunk(10)
+                .<PersonBean, PersonBean> chunk(10)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
                 .build();
     }
+    // end::jobstep[]
 }
 

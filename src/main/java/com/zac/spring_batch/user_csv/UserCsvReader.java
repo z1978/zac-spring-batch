@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserCsvReader extends FlatFileItemReader<UserCsvBean> {
-    private static final Logger logger = LoggerFactory.getLogger(UserCsvReader.class);
+    private static final Logger log = LoggerFactory.getLogger(UserCsvReader.class);
     @Bean
     public FlatFileItemReader<UserCsvBean> reader() {
         FlatFileItemReader<UserCsvBean> reader = new FlatFileItemReader<UserCsvBean>();
