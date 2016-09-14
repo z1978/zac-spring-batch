@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.zac.spring_batch.dao.PersonBean;
+
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {

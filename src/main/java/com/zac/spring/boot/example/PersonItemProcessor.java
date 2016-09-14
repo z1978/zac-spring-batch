@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
+import com.zac.spring_batch.dao.PersonBean;
+
 public class PersonItemProcessor implements ItemProcessor<PersonBean, PersonBean> {
 
     private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor.class);
