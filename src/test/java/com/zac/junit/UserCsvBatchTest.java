@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import com.zac.conf.ZacConfiguration;
 import com.zac.spring_batch.user_csv.UserCsvBean;
 import com.zac.spring_batch.user_csv.UserCsvConfig;
 import com.zac.spring_batch.user_csv.UserCsvProcessor;
@@ -25,7 +26,7 @@ import com.zac.spring_batch.user_csv.UserCsvWriter;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=UserCsvConfig.class,loader=AnnotationConfigContextLoader.class)
+@ContextConfiguration( classes = {ZacConfiguration.class,} )
 public class UserCsvBatchTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;

@@ -27,53 +27,51 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @since 2.0.0
  */
 @Configuration
-@EnableBatchProcessing(modular = true)
-@PropertySource({ "classpath:jdbc.properties", "classpath:log4j.properties" })
+@EnableBatchProcessing
+@PropertySource({"classpath:zac-common.properties", "classpath:zac-env.properties"}) 
+@MapperScan("com.zac.spring_batch.dao")
 @EnableAutoConfiguration
 public class ZacConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(ZacConfiguration.class);
+	/*
+     *  The following configuration code is commented out fix a problem that the batch framework start-up failure caused by the update of springframework dependency, from 4.1.7 to 4.2.4\
+     *	The issue is because the different behaviour of the two versions while handling the case that it tries to create a bean definition, but it has already existed in the context.
+     */
 
-	// @Bean
-	// public ApplicationContextFactory testConfig() {
-	// return new GenericApplicationContextFactory(test.class);
-	// }
-
-	// Manual config Spring Batch
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		return new ResourcelessTransactionManager();
-	}
-
-	@Bean
-	public JobRepository jobRepository() {
-		try {
-			MapJobRepositoryFactoryBean mapJobRepositoryFactoryBean = new MapJobRepositoryFactoryBean();
-			mapJobRepositoryFactoryBean.setTransactionManager(transactionManager());
-			return mapJobRepositoryFactoryBean.getObject();
-		} catch (Exception e) {
-			log.error("Failed to init jobRepository!", e);
-			return null;
-		}
-	}
-
-	@Bean
-	public JobLauncher jobLauncher() {
-		SimpleJobLauncher simpleJobLauncher = new SimpleJobLauncher();
-		simpleJobLauncher.setJobRepository(jobRepository());
-		return simpleJobLauncher;
-	}
-
-	@Bean
-	public JobRegistry jobRegistry() {
-		return new MapJobRegistry();
-	}
-
-	@Bean
-	public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
-		JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor = new JobRegistryBeanPostProcessor();
-		jobRegistryBeanPostProcessor.setJobRegistry(jobRegistry());
-		return jobRegistryBeanPostProcessor;
-	}
-
+    @Bean
+     public PlatformTransactionManager transactionManager(){
+     	return new ResourcelessTransactionManager();
+     }
+    
+    @Bean
+    public JobRepository jobRepository() {
+    	try {
+    		MapJobRepositoryFactoryBean mapJobRepositoryFactoryBean = new MapJobRepositoryFactoryBean();
+    		mapJobRepositoryFactoryBean.setTransactionManager(transactionManager());
+    		return mapJobRepositoryFactoryBean.getObject();
+    	} catch (Exception e) {
+    		log.error("Failed to init jobRepository!", e);
+    		return null;	
+    	}
+    }
+    
+    @Bean
+    public JobLauncher jobLauncher() {
+        SimpleJobLauncher simpleJobLauncher = new SimpleJobLauncher();
+        simpleJobLauncher.setJobRepository(jobRepository());
+        return simpleJobLauncher;
+    }
+    
+    @Bean
+    public JobRegistry jobRegistry() {
+    	return new MapJobRegistry();
+    }
+    
+    @Bean
+    public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
+        JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor = new JobRegistryBeanPostProcessor();
+        jobRegistryBeanPostProcessor.setJobRegistry(jobRegistry());
+        return jobRegistryBeanPostProcessor;
+    }
 }
